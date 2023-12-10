@@ -49,34 +49,57 @@ tetromino = random.choice(PIECES)
 # Initialize high score
 high_score = 0
 
-# Function to draw the grid lines
+
+# Function to draw a line using the Midpoint Line Algorithm
+def draw_line(x1, y1, x2, y2):
+    dy = y2 - y1
+    dx = x2 - x1
+    d = dy - (dx / 2)
+    x = x1
+    y = y1
+
+    while x < x2:
+        x += 1
+
+        if d < 0:
+            d += dy
+        else:
+            d += dy - dx
+            y += 1
+
+        # Draw a point at (x, y)
+        glBegin(GL_POINTS)
+        glColor3fv(WHITE)
+        glVertex2f(x, y)
+        glEnd()
+
+# Function to draw the grid lines using the Midpoint Line Algorithm
 def draw_grid():
     for x in range(0, SCREEN_WIDTH, GRID_SIZE):
-        glBegin(GL_LINES)
-        glColor3fv(WHITE)
-        glVertex2f(x, 0)
-        glVertex2f(x, SCREEN_HEIGHT)
-        glEnd()
+        draw_line(x, 0, x, SCREEN_HEIGHT)
 
     for y in range(0, SCREEN_HEIGHT, GRID_SIZE):
-        glBegin(GL_LINES)
-        glColor3fv(WHITE)
-        glVertex2f(0, y)
-        glVertex2f(SCREEN_WIDTH, y)
-        glEnd()
+        draw_line(0, y, SCREEN_WIDTH, y)
 
-# Function to draw a Tetromino at a given position
+# Function to draw a square at a given position
+def draw_square(x, y):
+    for i in range(GRID_SIZE):
+        for j in range(GRID_SIZE):
+            glBegin(GL_POINTS)
+            glColor3fv(tetromino_color)
+            glVertex2f(x + i, y + j)
+            glEnd()
+
+# Function to draw a Tetromino at a given position using the Midpoint Line Algorithm
 def draw_tetromino(tetromino, position):
     for y in range(len(tetromino)):
         for x in range(len(tetromino[y])):
             if tetromino[y][x] == 1:
-                glBegin(GL_QUADS)
-                glColor3fv(tetromino_color)
-                glVertex2f(position[0] * GRID_SIZE + x * GRID_SIZE, position[1] * GRID_SIZE + y * GRID_SIZE)
-                glVertex2f(position[0] * GRID_SIZE + (x + 1) * GRID_SIZE, position[1] * GRID_SIZE + y * GRID_SIZE)
-                glVertex2f(position[0] * GRID_SIZE + (x + 1) * GRID_SIZE, position[1] * GRID_SIZE + (y + 1) * GRID_SIZE)
-                glVertex2f(position[0] * GRID_SIZE + x * GRID_SIZE, position[1] * GRID_SIZE + (y + 1) * GRID_SIZE)
-                glEnd()
+                # Calculate the coordinates of the top-left corner of the Tetromino block
+                block_x = position[0] * GRID_SIZE + x * GRID_SIZE
+                block_y = position[1] * GRID_SIZE + y * GRID_SIZE
+                # Draw a square at the calculated coordinates
+                draw_square(block_x, block_y)
 
 # Function to check for collisions between Tetromino and the grid
 def check_collision(tetromino, position, grid):
