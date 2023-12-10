@@ -69,7 +69,6 @@ def draw_line(x1, y1, x2, y2):
 
         # Draw a point at (x, y)
         glBegin(GL_POINTS)
-        glColor3fv(WHITE)
         glVertex2f(x, y)
         glEnd()
 
