@@ -79,7 +79,7 @@ def draw_grid():
         draw_line(x, 0, x, SCREEN_HEIGHT)
 
     for y in range(0, SCREEN_HEIGHT, GRID_SIZE):
-        draw_line(0, y, SCREEN_WIDTH, y)
+        draw_line(0, 0, SCREEN_WIDTH, 0)
 
 # Function to draw a square at a given position
 def draw_square(x, y):
